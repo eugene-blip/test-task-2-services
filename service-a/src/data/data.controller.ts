@@ -6,7 +6,6 @@ import {
   UploadedFile,
   Get,
   Query,
-  ParseIntPipe,
   BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -73,13 +72,33 @@ export class DataController {
 
   @Get('all')
   @ApiOperation({ summary: 'Get all data with pagination' })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
-  @ApiQuery({ name: 'skip', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 100 })
+  @ApiQuery({ name: 'skip', required: false, type: Number, example: 0 })
   async getAllData(
-    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
-    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('limit') limitStr?: string,
+    @Query('skip') skipStr?: string,
   ) {
-    const data = await this.dataService.getAllData(limit || 100, skip || 0);
+    // Parse and validate query parameters manually
+    let limit = 100;
+    let skip = 0;
+
+    if (limitStr !== undefined && limitStr !== '') {
+      const parsedLimit = parseInt(limitStr, 10);
+      if (isNaN(parsedLimit) || parsedLimit <= 0) {
+        throw new BadRequestException('Limit must be a positive number');
+      }
+      limit = parsedLimit;
+    }
+
+    if (skipStr !== undefined && skipStr !== '') {
+      const parsedSkip = parseInt(skipStr, 10);
+      if (isNaN(parsedSkip) || parsedSkip < 0) {
+        throw new BadRequestException('Skip must be a non-negative number');
+      }
+      skip = parsedSkip;
+    }
+
+    const data = await this.dataService.getAllData(limit, skip);
     const total = await this.dataService.getDataCount();
 
     return {
@@ -87,8 +106,8 @@ export class DataController {
       data,
       pagination: {
         total,
-        limit: limit || 100,
-        skip: skip || 0,
+        limit,
+        skip,
       },
     };
   }
