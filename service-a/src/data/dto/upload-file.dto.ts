@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNumber, IsOptional, IsEnum } from 'class-validator';
 
 export class UploadFileDto {
   @ApiProperty({ type: 'string', format: 'binary' })
@@ -11,6 +12,7 @@ export class FetchDataDto {
     example: 'bitcoin',
     default: 'bitcoin'
   })
+  @IsString()
   coinId: string;
 
   @ApiProperty({ 
@@ -18,6 +20,7 @@ export class FetchDataDto {
     example: 'usd',
     default: 'usd'
   })
+  @IsString()
   vsCurrency: string;
 
   @ApiProperty({ 
@@ -25,6 +28,7 @@ export class FetchDataDto {
     example: 30,
     default: 30
   })
+  @IsNumber()
   days: number;
 
   @ApiProperty({ 
@@ -32,5 +36,7 @@ export class FetchDataDto {
     enum: ['json', 'excel'],
     default: 'json'
   })
+  @IsOptional()
+  @IsEnum(['json', 'excel'])
   format?: 'json' | 'excel';
 }
