@@ -9,10 +9,6 @@ export class FileService {
   private readonly logger = new Logger(FileService.name);
   private readonly dataDir = join(process.cwd(), 'data');
 
-  constructor() {
-    this.ensureDataDirectory();
-  }
-
   private async ensureDataDirectory(): Promise<void> {
     try {
       await fs.mkdir(this.dataDir, { recursive: true });
@@ -22,6 +18,8 @@ export class FileService {
   }
 
   async fetchAndSaveData(url: string, format: 'json' | 'excel' = 'json'): Promise<{ filePath: string; data: any[] }> {
+    await this.ensureDataDirectory();
+    
     try {
       // Fetch data from public API
       this.logger.log(`Fetching data from: ${url}`);
@@ -152,6 +150,8 @@ export class FileService {
   }
 
   async parseUploadedFile(buffer: Buffer, mimetype: string): Promise<any[]> {
+    await this.ensureDataDirectory();
+    
     const tempPath = join(this.dataDir, `temp_${Date.now()}`);
 
     try {

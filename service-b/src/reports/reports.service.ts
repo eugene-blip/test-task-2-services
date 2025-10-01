@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RedisService } from '../redis/redis.service';
 import { ChartService } from './chart.service';
-import PDFDocument from 'pdfkit';
+import * as PDFDocument from 'pdfkit';
 import { Readable } from 'stream';
 
 @Injectable()
@@ -128,17 +128,13 @@ export class ReportsService {
           }
         }
 
-        // Footer
-        const pages = doc.bufferedPageRange();
-        for (let i = 0; i < pages.count; i++) {
-          doc.switchToPage(i);
-          doc.fontSize(8).font('Helvetica').text(
-            `Page ${i + 1} of ${pages.count} | Generated: ${new Date().toLocaleString()}`,
-            50,
-            doc.page.height - 30,
-            { align: 'center' },
-          );
-        }
+        // Footer - Add to current page only (we'll skip complex page numbering for now)
+        doc.fontSize(8).font('Helvetica').text(
+          `Generated: ${new Date().toLocaleString()}`,
+          50,
+          doc.page.height - 30,
+          { align: 'center' },
+        );
 
         doc.end();
       } catch (error) {
