@@ -517,13 +517,13 @@ Should show RedisTimeSeries module loaded.
 **Service A:**
 ```bash
 cd service-a
-npm test
+pnpm test
 ```
 
 **Service B:**
 ```bash
 cd service-b
-npm test
+pnpm test
 ```
 
 ### Integration Tests

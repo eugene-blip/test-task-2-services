@@ -8,9 +8,9 @@ help: ## Show this help message
 
 install: ## Install dependencies for all services
 	@echo "Installing Service A dependencies..."
-	cd service-a && npm install
+	cd service-a && pnpm install
 	@echo "Installing Service B dependencies..."
-	cd service-b && npm install
+	cd service-b && pnpm install
 	@echo "Downloading Go dependencies..."
 	cd report-service && go mod download || echo "Go not installed, skipping"
 	@echo "Done!"
@@ -55,9 +55,9 @@ clean: ## Remove all containers, volumes, and generated files
 
 test: ## Run tests for all services
 	@echo "Testing Service A..."
-	cd service-a && npm test || true
+	cd service-a && pnpm test || true
 	@echo "Testing Service B..."
-	cd service-b && npm test || true
+	cd service-b && pnpm test || true
 
 build: ## Build all services
 	docker-compose build
@@ -78,14 +78,14 @@ shell-redis: ## Open Redis CLI
 	docker exec -it redis redis-cli
 
 dev-a: ## Run Service A in development mode (local)
-	cd service-a && npm run start:dev
+	cd service-a && pnpm run start:dev
 
 dev-b: ## Run Service B in development mode (local)
-	cd service-b && npm run start:dev
+	cd service-b && pnpm run start:dev
 
 format: ## Format code
-	cd service-a && npm run lint || true
-	cd service-b && npm run lint || true
+	cd service-a && pnpm run lint || true
+	cd service-b && pnpm run lint || true
 
 health: ## Check health of all services
 	@echo "Checking Service A..."

@@ -9,6 +9,7 @@ Welcome! This guide will help you get the microservices up and running in minute
 Ensure you have installed:
 - **Docker** (20.10+)
 - **Docker Compose** (2.0+)
+- **pnpm** (8.0+) - for local development
 
 Check versions:
 ```bash
@@ -264,18 +265,6 @@ docker-compose up -d
 ```
 
 ### Can't Connect to Services
-
-```bash
-# Check service health
-docker-compose ps
-
-# View service logs
-docker-compose logs service-a
-docker-compose logs service-b
-
-# Restart services
-docker-compose restart
-```
 
 ### No Data in MongoDB
 

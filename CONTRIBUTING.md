@@ -10,14 +10,22 @@ Thank you for your interest in contributing to this project!
    cd test-task-2-services
    ```
 
-2. **Install dependencies:**
+2. **Install pnpm (if not already installed):**
+   ```bash
+   npm install -g pnpm
+   ```
+
+3. **Install dependencies:**
    ```bash
    make install
    # or
    ./setup.sh
+   # or manually
+   cd service-a && pnpm install
+   cd ../service-b && pnpm install
    ```
 
-3. **Start services:**
+4. **Start services:**
    ```bash
    make up
    ```

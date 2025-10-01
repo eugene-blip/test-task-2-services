@@ -20,11 +20,17 @@ fi
 echo "✅ Docker and Docker Compose are installed"
 echo ""
 
+# Check if pnpm is installed
+if ! command -v pnpm &> /dev/null; then
+    echo "⚠️  pnpm is not installed. Installing pnpm..."
+    npm install -g pnpm
+fi
+
 # Install dependencies for Service A
 echo "📦 Installing dependencies for Service A..."
 cd service-a
 if [ -f "package.json" ]; then
-    npm install
+    pnpm install
     echo "✅ Service A dependencies installed"
 else
     echo "⚠️  Service A package.json not found"
@@ -36,7 +42,7 @@ echo ""
 echo "📦 Installing dependencies for Service B..."
 cd service-b
 if [ -f "package.json" ]; then
-    npm install
+    pnpm install
     echo "✅ Service B dependencies installed"
 else
     echo "⚠️  Service B package.json not found"

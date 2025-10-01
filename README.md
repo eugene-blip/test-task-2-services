@@ -61,6 +61,7 @@ Go-based gRPC service for high-performance PDF report generation with advanced c
 
 - Docker & Docker Compose
 - Node.js 20+ (for local development)
+- pnpm 8+ (package manager)
 - Go 1.21+ (for report service development)
 
 ### Installation & Running
@@ -93,15 +94,15 @@ This will start:
 #### Service A
 ```bash
 cd service-a
-npm install
-npm run start:dev
+pnpm install
+pnpm run start:dev
 ```
 
 #### Service B
 ```bash
 cd service-b
-npm install
-npm run start:dev
+pnpm install
+pnpm run start:dev
 ```
 
 #### Report Service (Go)
@@ -296,11 +297,11 @@ SERVICE_A_URL=http://service-a:3000
 ```bash
 # Service A
 cd service-a
-npm test
+pnpm test
 
 # Service B
 cd service-b
-npm test
+pnpm test
 
 # Report Service
 cd report-service
