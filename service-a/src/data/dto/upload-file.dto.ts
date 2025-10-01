@@ -7,10 +7,25 @@ export class UploadFileDto {
 
 export class FetchDataDto {
   @ApiProperty({ 
-    description: 'URL of the public API to fetch data from',
-    example: 'https://jsonplaceholder.typicode.com/users'
+    description: 'Cryptocurrency ID (e.g., bitcoin, ethereum, cardano)',
+    example: 'bitcoin',
+    default: 'bitcoin'
   })
-  url: string;
+  coinId: string;
+
+  @ApiProperty({ 
+    description: 'Target currency for historical data (e.g., usd, eur, gbp)',
+    example: 'usd',
+    default: 'usd'
+  })
+  vsCurrency: string;
+
+  @ApiProperty({ 
+    description: 'Number of days to retrieve historical data for (1, 7, 14, 30, 90, 180, 365, max)',
+    example: 30,
+    default: 30
+  })
+  days: number;
 
   @ApiProperty({ 
     description: 'File format to save data',

@@ -20,19 +20,30 @@ export class DataController {
   constructor(private readonly dataService: DataService) {}
 
   @Post('fetch')
-  @ApiOperation({ summary: 'Fetch data from public API and save to file' })
+  @ApiOperation({ summary: 'Fetch cryptocurrency historical data from CoinGecko API and save to file' })
   @ApiBody({ type: FetchDataDto })
   async fetchData(@Body() fetchDataDto: FetchDataDto) {
-    if (!fetchDataDto.url) {
-      throw new BadRequestException('URL is required');
+    if (!fetchDataDto.coinId) {
+      throw new BadRequestException('Cryptocurrency ID is required');
+    }
+    if (!fetchDataDto.vsCurrency) {
+      throw new BadRequestException('Target currency is required');
+    }
+    if (!fetchDataDto.days) {
+      throw new BadRequestException('Days parameter is required');
     }
 
     const format = fetchDataDto.format || 'json';
-    const result = await this.dataService.fetchDataFromApi(fetchDataDto.url, format);
+    const result = await this.dataService.fetchCryptoData(
+      fetchDataDto.coinId,
+      fetchDataDto.vsCurrency,
+      fetchDataDto.days,
+      format,
+    );
 
     return {
       success: true,
-      message: 'Data fetched and saved successfully',
+      message: 'Cryptocurrency data fetched and saved successfully',
       data: result,
     };
   }

@@ -20,6 +20,54 @@ export class DataService {
     return this.databaseService.getCollection<DataRecord>(this.collectionName);
   }
 
+  async fetchCryptoData(
+    coinId: string,
+    vsCurrency: string,
+    days: number,
+    format: 'json' | 'excel' = 'json',
+  ): Promise<FetchResult> {
+    const startTime = Date.now();
+    const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${vsCurrency}&days=${days}`;
+
+    try {
+      const { filePath, data } = await this.fileService.fetchAndSaveData(url, format);
+      const duration = Date.now() - startTime;
+
+      // Publish event
+      await this.eventPublisher.publishEvent({
+        eventType: 'DATA_FETCHED',
+        timestamp: Date.now(),
+        serviceId: 'service-a',
+        recordCount: data.length,
+        source: url,
+        duration,
+        metadata: { 
+          format, 
+          filePath, 
+          coinId, 
+          vsCurrency, 
+          days 
+        },
+      });
+
+      return {
+        recordCount: data.length,
+        filePath,
+        format,
+        duration,
+      };
+    } catch (error) {
+      await this.eventPublisher.publishEvent({
+        eventType: 'ERROR_OCCURRED',
+        timestamp: Date.now(),
+        serviceId: 'service-a',
+        error: error.message,
+        context: 'fetchCryptoData',
+      });
+      throw error;
+    }
+  }
+
   async fetchDataFromApi(url: string, format: 'json' | 'excel' = 'json'): Promise<FetchResult> {
     const startTime = Date.now();
 

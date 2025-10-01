@@ -86,10 +86,11 @@ export class FileService {
 
       // Style header
       worksheet.getRow(1).font = { bold: true };
+      const fgColor = 'FFE0E0E0';
       worksheet.getRow(1).fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFE0E0E0' },
+        fgColor: { argb: fgColor },
       };
     }
 
