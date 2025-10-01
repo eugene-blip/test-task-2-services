@@ -9,7 +9,10 @@ RUN apk add --no-cache \
     pixman-dev \
     pangomm-dev \
     libjpeg-turbo-dev \
-    freetype-dev
+    freetype-dev \
+    make \
+    g++ \
+    python3
 
 WORKDIR /app
 
