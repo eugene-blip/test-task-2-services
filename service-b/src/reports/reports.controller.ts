@@ -30,9 +30,9 @@ export class ReportsController {
   @ApiQuery({ name: 'startDate', required: false, type: String })
   @ApiQuery({ name: 'endDate', required: false, type: String })
   async generatePDFReport(
+    @Res() res: Response,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
-    @Res() res: Response,
   ) {
     const pdfBuffer = await this.reportsService.generatePDFReport(startDate, endDate);
 

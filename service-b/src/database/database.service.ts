@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
-import { MongoClient, Db, Collection } from 'mongodb';
+import { MongoClient, Db, Collection, Document } from 'mongodb';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
@@ -29,7 +29,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     return this.db;
   }
 
-  getCollection<T = any>(name: string): Collection<T> {
+  getCollection<T extends Document = Document>(name: string): Collection<T> {
     return this.db.collection<T>(name);
   }
 
