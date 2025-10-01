@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservices-network
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - redis_data:/data
+    networks:
+      - microservices-network
+
+  service-a:
+    build:
+      context: ./service-a
+      dockerfile: Dockerfile
+    container_name: service-a
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/serviceA?authSource=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SERVICE_NAME=service-a
+    volumes:
+      - ./service-a:/app
+      - /app/node_modules
+      - ./shared:/shared
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - microservices-network
+    command: npm run start:dev
+
+  service-b:
+    build:
+      context: ./service-b
+      dockerfile: Dockerfile
+    container_name: service-b
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/serviceB?authSource=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SERVICE_NAME=service-b
+      - SERVICE_A_URL=http://service-a:3000
+    volumes:
+      - ./service-b:/app
+      - /app/node_modules
+      - ./shared:/shared
+    depends_on:
+      - mongodb
+      - redis
+      - service-a
+    networks:
+      - microservices-network
+    command: npm run start:dev
+
+  report-service:
+    build:
+      context: ./report-service
+      dockerfile: Dockerfile
+    container_name: report-service
+    ports:
+      - "50051:50051"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - GRPC_PORT=50051
+    depends_on:
+      - redis
+    networks:
+      - microservices-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  microservices-network:
+    driver: bridge
