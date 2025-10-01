@@ -40,7 +40,6 @@ services:
       - REDIS_PORT=6379
       - SERVICE_NAME=service-a
     volumes:
-      - ./service-a:/app
       - /app/node_modules
       - ./shared:/shared
     depends_on:
@@ -48,7 +47,7 @@ services:
       - redis
     networks:
       - microservices-network
-    command: npm run start:dev
+    command: npm run start:prod
 
   service-b:
     build:
