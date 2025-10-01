@@ -65,7 +65,6 @@ services:
       - SERVICE_NAME=service-b
       - SERVICE_A_URL=http://service-a:3000
     volumes:
-      - ./service-b:/app
       - /app/node_modules
       - ./shared:/shared
     depends_on:
@@ -74,7 +73,7 @@ services:
       - service-a
     networks:
       - microservices-network
-    command: npm run start:dev
+    command: npm run start:prod
 
   report-service:
     build:

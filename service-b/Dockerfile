@@ -22,7 +22,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN rm -f tsconfig.tsbuildinfo && npm run build
 
 EXPOSE 3001
 
