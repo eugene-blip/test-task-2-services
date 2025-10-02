@@ -24,6 +24,6 @@ COPY . .
 
 RUN rm -f tsconfig.tsbuildinfo && npm run build
 
-EXPOSE 3001
+EXPOSE 3001 50051
 
 CMD ["npm", "run", "start:prod"]

@@ -56,9 +56,11 @@ services:
     container_name: service-b
     ports:
       - "3001:3001"
+      - "50051:50051"
     environment:
       - NODE_ENV=development
       - PORT=3001
+      - GRPC_PORT=50051
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/serviceB?authSource=admin
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -75,21 +77,6 @@ services:
       - microservices-network
     command: npm run start:prod
 
-  report-service:
-    build:
-      context: ./report-service
-      dockerfile: Dockerfile
-    container_name: report-service
-    ports:
-      - "50051:50051"
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - GRPC_PORT=50051
-    depends_on:
-      - redis
-    networks:
-      - microservices-network
 
 volumes:
   mongodb_data:

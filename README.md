@@ -6,8 +6,7 @@ A comprehensive microservices solution built with NestJS, featuring data process
 
 This project consists of:
 - **Service A**: Data fetching, file processing, and search API
-- **Service B**: Event logging, querying, and PDF report generation
-- **Report Service**: Go-based gRPC service for PDF generation (Bonus)
+- **Service B**: Event logging, querying, PDF report generation, and gRPC report API (Bonus)
 - **MongoDB**: Document storage for both services
 - **Redis Stack**: Pub/Sub messaging and RedisTimeSeries for analytics
 
@@ -62,7 +61,6 @@ Go-based gRPC service for high-performance PDF report generation with advanced c
 - Docker & Docker Compose
 - Node.js 20+ (for local development)
 - pnpm 8+ (package manager)
-- Go 1.21+ (for report service development)
 
 ### Installation & Running
 
@@ -81,12 +79,12 @@ This will start:
 - MongoDB (port 27017)
 - Redis Stack (port 6379, RedisInsight on 8001)
 - Service A (port 3000)
-- Service B (port 3001)
-- Report Service (port 50051)
+- Service B (port 3001, gRPC on 50051)
 
 3. **Access the services**
 - Service A API: http://localhost:3000/api
 - Service B API: http://localhost:3001/api
+- Service B gRPC: 0.0.0.0:50051 (package: report)
 - RedisInsight: http://localhost:8001
 
 ### Local Development
@@ -105,12 +103,6 @@ pnpm install
 pnpm run start:dev
 ```
 
-#### Report Service (Go)
-```bash
-cd report-service
-go mod download
-go run main.go
-```
 
 ## 📚 API Usage Examples
 
@@ -217,11 +209,8 @@ test-task-2-services/
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── Dockerfile
-└── report-service/             # Go gRPC service (Bonus)
-    ├── main.go
-    ├── proto/
-    ├── go.mod
-    └── Dockerfile
+│   ├── proto/                 # gRPC proto files (report.proto)
+│   │   └── report.proto
 ```
 
 ## 🔧 Technical Implementation
@@ -234,7 +223,7 @@ test-task-2-services/
 ### Inter-Service Communication
 - **Redis Pub/Sub**: For event-driven messaging between services
 - **RedisTimeSeries**: For storing time-series analytics data
-- **gRPC**: For high-performance report generation (bonus feature)
+- **gRPC (in Service B)**: For high-performance report generation (bonus feature)
 
 ### Data Processing
 - **File Operations**: Fully automated fetching and parsing (JSON/Excel)
@@ -279,6 +268,7 @@ SERVICE_NAME=service-a
 ### Service B
 ```env
 PORT=3001
+GRPC_PORT=50051
 MONGODB_URI=mongodb://admin:password123@mongodb:27017/serviceB?authSource=admin
 REDIS_HOST=redis
 REDIS_PORT=6379
