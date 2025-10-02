@@ -14,6 +14,13 @@ RUN apk add --no-cache \
     g++ \
     python3
 
+# Install fonts to fix chart rendering issues
+RUN apk add --no-cache \
+    fontconfig \
+    ttf-liberation \
+    ttf-dejavu \
+    font-noto
+
 WORKDIR /app
 
 COPY package*.json ./

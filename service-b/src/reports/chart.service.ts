@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
+import * as fs from 'fs';
 
 @Injectable()
 export class ChartService {
@@ -7,10 +8,20 @@ export class ChartService {
   private readonly chartJSNodeCanvas: ChartJSNodeCanvas;
 
   constructor() {
+    // Configure ChartJS with better font settings
     this.chartJSNodeCanvas = new ChartJSNodeCanvas({
       width: 800,
       height: 400,
       backgroundColour: 'white',
+      chartCallback: (ChartJS) => {
+        ChartJS.defaults.font = {
+          family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+          size: 12,
+          style: 'normal',
+          weight: 'normal',
+          lineHeight: 1.2
+        };
+      },
     });
   }
 
@@ -39,12 +50,20 @@ export class ChartService {
             display: true,
             text: title,
             font: {
+              family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
               size: 16,
+              weight: 'bold',
             },
           },
           legend: {
             display: true,
             position: 'top' as const,
+            labels: {
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 12,
+              },
+            },
           },
         },
         scales: {
@@ -53,12 +72,32 @@ export class ChartService {
             title: {
               display: true,
               text: 'Count',
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 12,
+              },
+            },
+            ticks: {
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 10,
+              },
             },
           },
           x: {
             title: {
               display: true,
               text: 'Time',
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 12,
+              },
+            },
+            ticks: {
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 10,
+              },
             },
           },
         },
@@ -95,12 +134,20 @@ export class ChartService {
             display: true,
             text: title,
             font: {
+              family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
               size: 16,
+              weight: 'bold',
             },
           },
           legend: {
             display: true,
             position: 'top' as const,
+            labels: {
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 12,
+              },
+            },
           },
         },
         scales: {
@@ -109,6 +156,24 @@ export class ChartService {
             title: {
               display: true,
               text: 'Count',
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 12,
+              },
+            },
+            ticks: {
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 10,
+              },
+            },
+          },
+          x: {
+            ticks: {
+              font: {
+                family: 'Liberation Sans, DejaVu Sans, Arial, sans-serif',
+                size: 10,
+              },
             },
           },
         },
