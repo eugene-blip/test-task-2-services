@@ -35,11 +35,14 @@ export class ReportsGrpcController {
 
   @GrpcMethod('ReportService', 'GenerateReport')
   async generateReport(data: ReportRequest): Promise<ReportResponse> {
-    const startDate = data.start_timestamp
-      ? new Date(data.start_timestamp).toISOString()
+    const startTimestamp = data.start_timestamp ? Number(data.start_timestamp) : undefined;
+    const endTimestamp = data.end_timestamp ? Number(data.end_timestamp) : undefined;
+    
+    const startDate = startTimestamp && !isNaN(startTimestamp)
+      ? new Date(startTimestamp).toISOString()
       : undefined;
-    const endDate = data.end_timestamp
-      ? new Date(data.end_timestamp).toISOString()
+    const endDate = endTimestamp && !isNaN(endTimestamp)
+      ? new Date(endTimestamp).toISOString()
       : undefined;
 
     const pdfBuffer = await this.reportsService.generatePDFReport(startDate, endDate);
