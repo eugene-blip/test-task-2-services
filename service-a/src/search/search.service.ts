@@ -3,6 +3,7 @@ import { DatabaseService } from '../database/database.service';
 import { EventPublisherService } from '../redis/event-publisher.service';
 import { SearchDto, SearchResult } from './dto/search.dto';
 import { Collection } from 'mongodb';
+import { EventType } from '../shared/types/events';
 
 @Injectable()
 export class SearchService {
@@ -53,7 +54,7 @@ export class SearchService {
 
       // Publish search event
       await this.eventPublisher.publishEvent({
-        eventType: 'SEARCH_PERFORMED',
+        eventType: EventType.SEARCH_PERFORMED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         query: query || '',
@@ -80,7 +81,7 @@ export class SearchService {
       this.logger.error('Search error:', error);
 
       await this.eventPublisher.publishEvent({
-        eventType: 'ERROR_OCCURRED',
+        eventType: EventType.ERROR_OCCURRED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         error: error.message,
@@ -122,7 +123,7 @@ export class SearchService {
 
       // Publish search event
       await this.eventPublisher.publishEvent({
-        eventType: 'SEARCH_PERFORMED',
+        eventType: EventType.SEARCH_PERFORMED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         query: JSON.stringify(filters),

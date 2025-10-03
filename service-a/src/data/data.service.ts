@@ -4,6 +4,7 @@ import { EventPublisherService } from '../redis/event-publisher.service';
 import { FileService } from './file.service';
 import { DataRecord, FetchResult, UploadResult } from './interfaces/data.interface';
 import { Collection } from 'mongodb';
+import { EventType } from '../shared/types/events';
 
 @Injectable()
 export class DataService {
@@ -35,7 +36,7 @@ export class DataService {
 
       // Publish event
       await this.eventPublisher.publishEvent({
-        eventType: 'DATA_FETCHED',
+        eventType: EventType.DATA_FETCHED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         recordCount: data.length,
@@ -58,7 +59,7 @@ export class DataService {
       };
     } catch (error) {
       await this.eventPublisher.publishEvent({
-        eventType: 'ERROR_OCCURRED',
+        eventType: EventType.ERROR_OCCURRED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         error: error.message,
@@ -77,7 +78,7 @@ export class DataService {
 
       // Publish event
       await this.eventPublisher.publishEvent({
-        eventType: 'DATA_FETCHED',
+        eventType: EventType.DATA_FETCHED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         recordCount: data.length,
@@ -94,7 +95,7 @@ export class DataService {
       };
     } catch (error) {
       await this.eventPublisher.publishEvent({
-        eventType: 'ERROR_OCCURRED',
+        eventType: EventType.ERROR_OCCURRED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         error: error.message,
@@ -110,7 +111,7 @@ export class DataService {
     try {
       // Publish file uploaded event
       await this.eventPublisher.publishEvent({
-        eventType: 'FILE_UPLOADED',
+        eventType: EventType.FILE_UPLOADED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         fileName: filename,
@@ -127,7 +128,7 @@ export class DataService {
 
       // Publish data inserted event
       await this.eventPublisher.publishEvent({
-        eventType: 'DATA_INSERTED',
+        eventType: EventType.DATA_INSERTED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         collectionName: this.collectionName,
@@ -143,7 +144,7 @@ export class DataService {
       };
     } catch (error) {
       await this.eventPublisher.publishEvent({
-        eventType: 'ERROR_OCCURRED',
+        eventType: EventType.ERROR_OCCURRED,
         timestamp: Date.now(),
         serviceId: 'service-a',
         error: error.message,

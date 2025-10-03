@@ -1,11 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RedisService } from './redis.service';
+import { EventType, ServiceEvent } from '../shared/types/events';
 
-export interface ServiceEvent {
-  eventType: string;
-  timestamp: number;
-  serviceId: string;
-  metadata?: Record<string, any>;
+// Extend the shared ServiceEvent interface to allow additional properties
+export interface ExtendedServiceEvent extends Omit<ServiceEvent, 'eventType'> {
+  eventType: EventType | string; // Allow both enum and string for flexibility
   [key: string]: any;
 }
 
@@ -19,7 +18,7 @@ export class EventPublisherService {
     this.serviceId = process.env.SERVICE_NAME || 'service-a';
   }
 
-  async publishEvent(event: ServiceEvent): Promise<void> {
+  async publishEvent(event: ExtendedServiceEvent): Promise<void> {
     try {
       const enrichedEvent = {
         ...event,
@@ -43,7 +42,7 @@ export class EventPublisherService {
     }
   }
 
-  private async storeInTimeSeries(event: ServiceEvent): Promise<void> {
+  private async storeInTimeSeries(event: ExtendedServiceEvent): Promise<void> {
     const timestamp = event.timestamp;
     const eventType = event.eventType;
 
