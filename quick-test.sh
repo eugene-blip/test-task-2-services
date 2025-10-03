@@ -37,8 +37,9 @@ echo -e "${YELLOW}Test 1: Fetching data from public API...${NC}"
 response=$(curl -s -X POST http://localhost:3000/data/fetch \
   -H "Content-Type: application/json" \
   -d '{
-    "url": "https://jsonplaceholder.typicode.com/users",
-    "format": "json"
+    "coinId": "bitcoin",
+    "vsCurrency": "usd",
+    "days": 30
   }')
 
 if echo "$response" | grep -q "success"; then
@@ -143,7 +144,7 @@ cat > /tmp/test-upload.json << 'EOF'
 EOF
 
 response=$(curl -s -X POST http://localhost:3000/data/upload \
-  -F "file=@/tmp/test-upload.json")
+  -F "file=@/tmp/test-upload.json;type=application/json")
 
 if echo "$response" | grep -q "success"; then
     echo -e "${GREEN}✅ File upload successful${NC}"
