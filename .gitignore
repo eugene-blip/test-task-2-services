@@ -35,6 +35,9 @@ npm-debug.log*
 data/*.json
 uploads/*.json
 reports/*.json
+# Service A fetched data files
+service-a/data/*.json
+service-a/data/*.xlsx
 
 # Go
 report-service/report-service
