@@ -50,3 +50,9 @@ go.work
 # Temporary files
 tmp/
 temp/
+
+# AI-generated files
+WARP.md
+
+# PDF files (root only)
+*.pdf
