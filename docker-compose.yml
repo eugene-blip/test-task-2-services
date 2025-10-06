@@ -55,11 +55,9 @@ services:
     container_name: service-b
     ports:
       - "3001:3001"
-      - "50051:50051"
     environment:
       - NODE_ENV=development
       - PORT=3001
-      - GRPC_PORT=50051
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/serviceB?authSource=admin
       - REDIS_HOST=redis
       - REDIS_PORT=6379

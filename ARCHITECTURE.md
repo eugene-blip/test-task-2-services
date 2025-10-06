@@ -2,7 +2,7 @@
 
 ## System Overview
 
-This microservices architecture demonstrates event-driven design with two main NestJS services and an optional Go gRPC service for high-performance reporting.
+This microservices architecture demonstrates event-driven design with two main NestJS services.
 
 ## Component Diagram
 
@@ -44,16 +44,6 @@ This microservices architecture demonstrates event-driven design with two main N
 │ - serviceB DB   │
 └─────────────────┘
 
-         Optional: gRPC
-              │
-              ▼
-    ┌────────────────┐
-    │ Report Service │
-    │  (Port 50051)  │
-    │                │
-    │ - Go/gRPC      │
-    │ - PDF Gen      │
-    └────────────────┘
 ```
 
 ## Data Flow
@@ -142,12 +132,6 @@ Returns PDF to user
 - **Charts**: chartjs-node-canvas
 - **Documentation**: Swagger/OpenAPI
 
-### Report Service (Go - Bonus)
-- **Language**: Go 1.21+
-- **RPC**: gRPC
-- **Redis Client**: go-redis
-- **PDF**: gofpdf
-- **Charts**: go-chart
 
 ### Infrastructure
 - **Orchestration**: Docker Compose

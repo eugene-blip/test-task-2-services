@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a complete microservices architecture with two NestJS services and a bonus Go gRPC service, demonstrating event-driven design, data processing, and advanced reporting capabilities.
+This project implements a complete microservices architecture with two NestJS services, demonstrating event-driven design, data processing, and advanced reporting capabilities.
 
 ## ✅ Requirements Fulfilled
 
@@ -127,17 +127,6 @@ This project implements a complete microservices architecture with two NestJS se
 
 ### Bonus Features
 
-#### ✅ Go gRPC Report Service
-- **Port**: 50051
-- High-performance PDF generation
-- gRPC API with Protocol Buffers
-- Redis integration for time series queries
-- Separate Docker container
-- Complete with:
-  - `proto/report.proto` definition
-  - Go implementation
-  - Dockerfile
-  - Documentation
 
 #### ✅ Complete In-Code Implementation
 - No manual file downloads required
@@ -264,15 +253,6 @@ test-task-2-services/
 │   ├── nest-cli.json
 │   └── Dockerfile
 │
-└── report-service/              # Go gRPC service (Bonus)
-    ├── main.go
-    ├── proto/
-    │   ├── report.proto
-    │   └── report.pb.go
-    ├── go.mod
-    ├── go.sum
-    ├── Dockerfile
-    └── README.md
 ```
 
 ## Technology Stack
@@ -284,8 +264,6 @@ test-task-2-services/
 | Language | TypeScript | 5.3.3 |
 | Database | MongoDB | 7.0 |
 | Cache/Messaging | Redis Stack | Latest |
-| Bonus Service | Go | 1.21+ |
-| RPC | gRPC | Latest |
 | Containerization | Docker | Latest |
 | Orchestration | Docker Compose | Latest |
 
@@ -300,10 +278,6 @@ test-task-2-services/
 - `pdfkit`: PDF generation
 - `chartjs-node-canvas`: Chart generation
 
-**Report Service:**
-- `google.golang.org/grpc`: gRPC framework
-- `github.com/go-redis/redis/v8`: Redis client
-- `github.com/jung-kurt/gofpdf`: PDF generation
 
 ## Quick Start
 
@@ -366,7 +340,7 @@ docker-compose up -d
 4. ✅ **Advanced Features**: PDF reports with charts, time series analytics
 5. ✅ **Clean Code**: Strongly typed, modular, reusable
 6. ✅ **Comprehensive Documentation**: README, architecture, testing guides
-7. ✅ **Bonus Features**: Go gRPC service, complete automation
+7. ✅ **Bonus Features**: Complete automation
 8. ✅ **Production Ready**: Docker Compose, proper error handling, logging
 
 ## Performance Optimizations
@@ -406,4 +380,4 @@ This project successfully implements all required features and bonus features, d
 - Comprehensive documentation
 - Production-ready setup
 
-All requirements have been met and exceeded with bonus features including the Go gRPC service and complete automation of data processing workflows.
+All requirements have been met and exceeded with bonus features including complete automation of data processing workflows.

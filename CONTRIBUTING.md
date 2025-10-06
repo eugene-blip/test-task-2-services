@@ -55,21 +55,6 @@ export class MyService {
 }
 ```
 
-### Go (Report Service)
-
-- Follow Go standard formatting (gofmt)
-- Use meaningful variable names
-- Write tests for all functions
-- Handle errors explicitly
-- Document exported functions
-
-**Example:**
-```go
-// GenerateReport creates a PDF report from time series data
-func GenerateReport(ctx context.Context, data []DataPoint) ([]byte, error) {
-    // Implementation
-}
-```
 
 ## Project Structure
 

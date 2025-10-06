@@ -50,21 +50,6 @@ fi
 cd ..
 echo ""
 
-# Setup Go Report Service (optional)
-echo "📦 Setting up Go Report Service..."
-cd report-service
-if [ -f "go.mod" ]; then
-    if command -v go &> /dev/null; then
-        go mod download
-        echo "✅ Go Report Service dependencies downloaded"
-    else
-        echo "⚠️  Go is not installed. Skipping Go service setup."
-    fi
-else
-    echo "⚠️  go.mod not found"
-fi
-cd ..
-echo ""
 
 echo "=========================================="
 echo "Setup Complete!"
