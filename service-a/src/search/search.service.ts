@@ -30,8 +30,14 @@ export class SearchService {
       // Build search filter
       let filter: any = {};
       if (query && query.trim()) {
-        // Use MongoDB text search if available
-        filter = { $text: { $search: query } };
+        // Search across string fields using regex
+        // Note: This searches all string fields in the document
+        const searchFields = ['name', 'description', 'symbol', 'title', 'content', 'type'];
+        filter = {
+          $or: searchFields.map(field => ({
+            [field]: { $regex: query, $options: 'i' }
+          }))
+        };
       }
 
       // Build sort

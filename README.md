@@ -19,9 +19,9 @@ This project consists of:
 - **File Upload & Parsing**: Upload JSON or Excel files and parse them automatically
 - **Robust MongoDB Insertion**: Bulk insert with fallback to individual inserts for error handling
 - **Advanced Search API**: 
-  - Full-text search with MongoDB text indexes
-  - Efficient cursor-based pagination
-  - Custom filter support
+  - Full-text search with regex pattern matching
+  - Efficient offset-based pagination
+  - Custom filter support with advanced queries
   - Sorting capabilities
 - **Event Publishing**: All API actions published to RedisTimeSeries for analytics
 
@@ -224,9 +224,9 @@ test-task-2-services/
 - **Indexing**: MongoDB text indexes and compound indexes for performance
 
 ### Search & Pagination
-- **Text Search**: MongoDB full-text search with text indexes
-- **Efficient Pagination**: Cursor-based pagination with compound indexes
-- **Filtering**: Dynamic query building for advanced filters
+- **Text Search**: MongoDB regex-based search across multiple fields (name, description, symbol, title, content, type)
+- **Efficient Pagination**: Offset-based pagination with configurable page size
+- **Filtering**: Dynamic query building for advanced filters with regex and exact match support
 
 ### Event Publishing
 - All API actions publish events to Redis
