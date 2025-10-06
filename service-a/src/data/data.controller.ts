@@ -9,9 +9,10 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery, ApiOkResponse } from '@nestjs/swagger';
 import { DataService } from './data.service';
 import { FetchDataDto, UploadFileDto } from './dto/upload-file.dto';
+import { FetchDataResponseDto } from './dto/fetch-response.dto';
 
 @ApiTags('data')
 @Controller('data')
@@ -21,6 +22,7 @@ export class DataController {
   @Post('fetch')
   @ApiOperation({ summary: 'Fetch cryptocurrency historical data from CoinGecko API and save to file' })
   @ApiBody({ type: FetchDataDto })
+  @ApiOkResponse({ description: 'Fetch result including insertedCount', type: FetchDataResponseDto })
   async fetchData(@Body() fetchDataDto: FetchDataDto) {
     if (!fetchDataDto.coinId) {
       throw new BadRequestException('Cryptocurrency ID is required');

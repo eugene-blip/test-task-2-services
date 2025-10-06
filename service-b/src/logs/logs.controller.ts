@@ -2,6 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { LogsService } from './logs.service';
 import { QueryLogsDto } from './dto/query-logs.dto';
+import { StatsQueryDto } from './dto/stats-query.dto';
 
 @ApiTags('logs')
 @Controller('logs')
@@ -20,13 +21,12 @@ export class LogsController {
 
   @Get('stats')
   @ApiOperation({ summary: 'Get log statistics' })
-  @ApiQuery({ name: 'startDate', required: false, type: String })
-  @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2025-09-01T00:00:00Z', description: 'Start date (ISO format)' })
+  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2025-10-01T23:59:59Z', description: 'End date (ISO format)' })
   async getStats(
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query() query: StatsQueryDto,
   ) {
-    const stats = await this.logsService.getStats(startDate, endDate);
+    const stats = await this.logsService.getStats(query.startDate, query.endDate);
     return {
       success: true,
       data: stats,

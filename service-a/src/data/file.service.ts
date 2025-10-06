@@ -17,14 +17,28 @@ export class FileService {
     }
   }
 
-  async fetchAndSaveData(url: string, format: 'json' | 'excel' = 'json'): Promise<{ filePath: string; data: any[] }> {
+  async fetchAndSaveData(
+    url: string,
+    format: 'json' | 'excel' = 'json',
+    options?: { enrich?: Record<string, any> }
+  ): Promise<{ filePath: string; data: any[] }> {
     await this.ensureDataDirectory();
     
     try {
       // Fetch data from public API
       this.logger.log(`Fetching data from: ${url}`);
       const response = await axios.get(url);
-      const data = Array.isArray(response.data) ? response.data : [response.data];
+
+      let data: any[];
+      const raw = response.data;
+
+      // If enrich metadata is provided and the payload has a `prices` array (CoinGecko market_chart),
+      // save a single object that includes the request parameters + prices
+      if (options?.enrich && raw && typeof raw === 'object' && Array.isArray(raw.prices)) {
+        data = [{ ...options.enrich, prices: raw.prices }];
+      } else {
+        data = Array.isArray(raw) ? raw : [raw];
+      }
 
       // Generate filename
       const timestamp = Date.now();

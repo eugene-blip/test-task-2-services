@@ -85,11 +85,6 @@ async search(filters: Record<string, any>, searchDto: SearchDto): Promise<Search
     for (const [key, value] of Object.entries(filters)) {
       if (value === null || value === undefined) continue;
 
-      if (key === 'query' && typeof value === 'string' && value.trim() !== '') {
-        const searchFields = ['name', 'description', 'symbol', 'title', 'content', 'type'];
-        query.$or = searchFields.map((field) => ({ [field]: { $regex: value, $options: 'i' } }));
-        continue;
-      }
 
       if (typeof value === 'string') {
         // Use regex for string fields

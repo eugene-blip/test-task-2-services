@@ -1,16 +1,35 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min, Max, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class SearchDto {
-  @ApiProperty({ 
-    description: 'Free-text search query',
+  @ApiProperty({
+    description: 'Filter by coin ID (exact or partial match)',
     example: 'bitcoin',
-    required: false 
+    required: false,
   })
   @IsOptional()
   @IsString()
-  query?: string;
+  coinId?: string;
+
+  @ApiProperty({
+    description: 'Filter by vsCurrency (e.g., usd, eur)',
+    example: 'usd',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  vsCurrency?: string;
+
+  @ApiProperty({
+    description: 'Filter by days (exact value used during fetch)',
+    example: 30,
+    required: false,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  days?: number;
 
   @ApiProperty({ 
     description: 'Page number (1-indexed)',

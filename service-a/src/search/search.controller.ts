@@ -1,7 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { SearchDto } from './dto/search.dto';
+import { SearchResponseDto } from './dto/search-response.dto';
 
 @ApiTags('search')
 @Controller('search')
@@ -10,6 +11,7 @@ export class SearchController {
 
   @Get()
   @ApiOperation({ summary: 'Advanced search with custom filters and pagination' })
+  @ApiOkResponse({ description: 'Search results including time-series records', type: SearchResponseDto })
   async search(@Query() searchDto: SearchDto) {
     // Extract search filters from query parameters
     const { page, limit, sortBy, sortOrder, ...filters } = searchDto;

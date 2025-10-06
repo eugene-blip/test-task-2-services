@@ -11,13 +11,12 @@ export class ReportsController {
 
   @Get('timeseries')
   @ApiOperation({ summary: 'Get time series data from RedisTimeSeries' })
-  @ApiQuery({ name: 'startDate', required: false, type: String })
-  @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2025-09-01T00:00:00Z', description: 'Start date for report (ISO format)' })
+  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2025-10-01T23:59:59Z', description: 'End date for report (ISO format)' })
   async getTimeSeriesData(
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query() query: GenerateReportDto,
   ) {
-    const data = await this.reportsService.getTimeSeriesData(startDate, endDate);
+    const data = await this.reportsService.getTimeSeriesData(query.startDate, query.endDate);
     return {
       success: true,
       data,
@@ -27,14 +26,13 @@ export class ReportsController {
   @Get('pdf')
   @ApiOperation({ summary: 'Generate PDF report with charts from time series data' })
   @ApiProduces('application/pdf')
-  @ApiQuery({ name: 'startDate', required: false, type: String })
-  @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2025-09-01T00:00:00Z', description: 'Start date for report (ISO format)' })
+  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2025-10-01T23:59:59Z', description: 'End date for report (ISO format)' })
   async generatePDFReport(
     @Res() res: Response,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query() query: GenerateReportDto,
   ) {
-    const pdfBuffer = await this.reportsService.generatePDFReport(startDate, endDate);
+    const pdfBuffer = await this.reportsService.generatePDFReport(query.startDate, query.endDate);
 
     res.set({
       'Content-Type': 'application/pdf',

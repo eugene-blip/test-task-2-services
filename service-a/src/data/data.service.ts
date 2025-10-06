@@ -31,10 +31,17 @@ export class DataService {
     const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${vsCurrency}&days=${days}`;
 
     try {
-      const { filePath, data } = await this.fileService.fetchAndSaveData(url, format);
+      const { filePath, data } = await this.fileService.fetchAndSaveData(
+        url,
+        format,
+        { enrich: { coinId, vsCurrency, days } }
+      );
       const duration = Date.now() - startTime;
 
-      // Publish event
+      // Insert enriched data into MongoDB
+      const insertResult = await this.insertDataRobustly(data);
+
+      // Publish events
       await this.eventPublisher.publishEvent({
         eventType: EventType.DATA_FETCHED,
         timestamp: Date.now(),
@@ -51,11 +58,21 @@ export class DataService {
         },
       });
 
+      await this.eventPublisher.publishEvent({
+        eventType: EventType.DATA_INSERTED,
+        timestamp: Date.now(),
+        serviceId: 'service-a',
+        collectionName: this.collectionName,
+        recordCount: insertResult.insertedCount,
+        duration,
+      });
+
       return {
         recordCount: data.length,
         filePath,
         format,
         duration,
+        insertedCount: insertResult.insertedCount,
       };
     } catch (error) {
       await this.eventPublisher.publishEvent({
@@ -92,6 +109,7 @@ export class DataService {
         filePath,
         format,
         duration,
+        insertedCount: 0,
       };
     } catch (error) {
       await this.eventPublisher.publishEvent({

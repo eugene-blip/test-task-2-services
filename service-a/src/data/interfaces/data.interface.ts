@@ -17,6 +17,7 @@ export interface FetchResult {
   filePath: string;
   format: string;
   duration: number;
+  insertedCount: number;
 }
 
 export interface UploadResult {

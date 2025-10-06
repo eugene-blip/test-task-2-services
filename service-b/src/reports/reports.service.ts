@@ -14,7 +14,9 @@ export class ReportsService {
   ) {}
 
   async getTimeSeriesData(startDate?: string, endDate?: string) {
-    const fromTimestamp = startDate ? new Date(startDate).getTime() : Date.now() - 7 * 24 * 60 * 60 * 1000;
+    // Default to last 30 days if no dates are provided ("last month" behavior)
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+    const fromTimestamp = startDate ? new Date(startDate).getTime() : Date.now() - THIRTY_DAYS_MS;
     const toTimestamp = endDate ? new Date(endDate).getTime() : Date.now();
 
     const timeSeriesKeys = await this.redisService.getAllTimeSeries();
@@ -51,7 +53,7 @@ export class ReportsService {
         doc.moveDown();
 
         // Date range
-        const fromDate = startDate ? new Date(startDate).toLocaleDateString() : 'Last 7 days';
+        const fromDate = startDate ? new Date(startDate).toLocaleDateString() : 'Last 30 days';
         const toDate = endDate ? new Date(endDate).toLocaleDateString() : 'Now';
         doc.fontSize(12).font('Helvetica').text(`Report Period: ${fromDate} - ${toDate}`, { align: 'center' });
         doc.moveDown(2);

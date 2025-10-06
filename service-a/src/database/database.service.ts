@@ -54,6 +54,16 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         { email: 1 },
         { name: 'email_index', unique: false }
       );
+
+      // Indexes to speed up coin/time-series searches
+      await dataCollection.createIndex(
+        { coinId: 1 },
+        { name: 'coinId_index' }
+      );
+      await dataCollection.createIndex(
+        { vsCurrency: 1 },
+        { name: 'vsCurrency_index' }
+      );
       
       this.logger.log('Database indexes created successfully');
     } catch (error) {
