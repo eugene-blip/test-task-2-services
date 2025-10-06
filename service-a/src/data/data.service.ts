@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { EventPublisherService } from '../redis/event-publisher.service';
 import { FileService } from './file.service';
@@ -222,5 +222,27 @@ export class DataService {
   async getDataCount(): Promise<number> {
     const collection = this.getCollection();
     return collection.countDocuments();
+  }
+
+  async deleteByCoinId(coinId: string): Promise<{ deletedCount: number }> {
+    if (!coinId || !coinId.trim()) {
+      throw new BadRequestException('coinId is required');
+    }
+    const collection = this.getCollection();
+    const result = await collection.deleteMany({ coinId });
+
+    // Publish deletion event (only when documents were deleted)
+    if (result.deletedCount && result.deletedCount > 0) {
+      await this.eventPublisher.publishEvent({
+        eventType: EventType.DATA_DELETED,
+        timestamp: Date.now(),
+        serviceId: 'service-a',
+        collectionName: this.collectionName,
+        recordCount: result.deletedCount,
+        metadata: { coinId },
+      });
+    }
+
+    return { deletedCount: result.deletedCount ?? 0 };
   }
 }

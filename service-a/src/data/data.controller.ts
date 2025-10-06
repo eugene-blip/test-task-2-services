@@ -7,9 +7,12 @@ import {
   Get,
   Query,
   BadRequestException,
+  Delete,
+  Param,
+  NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery, ApiOkResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 import { DataService } from './data.service';
 import { FetchDataDto, UploadFileDto } from './dto/upload-file.dto';
 import { FetchDataResponseDto } from './dto/fetch-response.dto';
@@ -111,6 +114,22 @@ export class DataController {
         limit,
         skip,
       },
+    };
+  }
+
+  @Delete(':coinId')
+  @ApiOperation({ summary: 'Delete data records by coinId (e.g., bitcoin)' })
+  @ApiParam({ name: 'coinId', description: 'Cryptocurrency ID used when fetching data (e.g., bitcoin)' })
+  @ApiOkResponse({ description: 'Deletion result' })
+  async deleteByCoinId(@Param('coinId') coinId: string) {
+    const result = await this.dataService.deleteByCoinId(coinId);
+    if (!result.deletedCount) {
+      throw new NotFoundException('No records found for the specified coinId');
+    }
+    return {
+      success: true,
+      message: 'Records deleted successfully',
+      data: { coinId, deletedCount: result.deletedCount },
     };
   }
 }
