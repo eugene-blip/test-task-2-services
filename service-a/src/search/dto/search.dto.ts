@@ -4,8 +4,8 @@ import { Type } from 'class-transformer';
 
 export class SearchDto {
   @ApiProperty({ 
-    description: 'Search query',
-    example: 'coin',
+    description: 'Free-text search query',
+    example: 'bitcoin',
     required: false 
   })
   @IsOptional()

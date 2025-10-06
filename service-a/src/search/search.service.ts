@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { EventPublisherService } from '../redis/event-publisher.service';
-import { SearchDto, SearchResult } from './dto/search.dto';
+import { SearchResult, SearchDto } from './dto/search.dto';
 import { Collection } from 'mongodb';
 import { EventType } from '../shared/types/events';
 
@@ -19,86 +19,8 @@ export class SearchService {
     return this.databaseService.getCollection(this.collectionName);
   }
 
-  async search(searchDto: SearchDto): Promise<SearchResult<any>> {
-    const startTime = Date.now();
-    const { query, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = searchDto;
 
-    try {
-      const collection = this.getCollection();
-      const skip = (page - 1) * limit;
-
-      // Build search filter
-      let filter: any = {};
-      if (query && query.trim()) {
-        // Search across string fields using regex
-        // Note: This searches all string fields in the document
-        const searchFields = ['name', 'description', 'symbol', 'title', 'content', 'type'];
-        filter = {
-          $or: searchFields.map(field => ({
-            [field]: { $regex: query, $options: 'i' }
-          }))
-        };
-      }
-
-      // Build sort
-      const sort: any = {};
-      sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
-
-      // Execute search with pagination
-      const [data, total] = await Promise.all([
-        collection
-          .find(filter)
-          .sort(sort)
-          .skip(skip)
-          .limit(limit)
-          .toArray(),
-        collection.countDocuments(filter),
-      ]);
-
-      const duration = Date.now() - startTime;
-      const totalPages = Math.ceil(total / limit);
-
-      // Publish search event
-      await this.eventPublisher.publishEvent({
-        eventType: EventType.SEARCH_PERFORMED,
-        timestamp: Date.now(),
-        serviceId: 'service-a',
-        query: query || '',
-        resultCount: data.length,
-        page,
-        limit,
-        duration,
-      });
-
-      return {
-        data,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages,
-          hasNext: page < totalPages,
-          hasPrev: page > 1,
-        },
-        query,
-        duration,
-      };
-    } catch (error) {
-      this.logger.error('Search error:', error);
-
-      await this.eventPublisher.publishEvent({
-        eventType: EventType.ERROR_OCCURRED,
-        timestamp: Date.now(),
-        serviceId: 'service-a',
-        error: error.message,
-        context: 'search',
-      });
-
-      throw error;
-    }
-  }
-
-  async advancedSearch(filters: Record<string, any>, searchDto: SearchDto): Promise<SearchResult<any>> {
+async search(filters: Record<string, any>, searchDto: SearchDto): Promise<SearchResult<any>> {
     const startTime = Date.now();
     const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = searchDto;
 
@@ -152,7 +74,7 @@ export class SearchService {
         duration,
       };
     } catch (error) {
-      this.logger.error('Advanced search error:', error);
+      this.logger.error('Search error:', error);
       throw error;
     }
   }
@@ -162,6 +84,12 @@ export class SearchService {
 
     for (const [key, value] of Object.entries(filters)) {
       if (value === null || value === undefined) continue;
+
+      if (key === 'query' && typeof value === 'string' && value.trim() !== '') {
+        const searchFields = ['name', 'description', 'symbol', 'title', 'content', 'type'];
+        query.$or = searchFields.map((field) => ({ [field]: { $regex: value, $options: 'i' } }));
+        continue;
+      }
 
       if (typeof value === 'string') {
         // Use regex for string fields
