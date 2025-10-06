@@ -3,6 +3,9 @@ import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { LogsService } from './logs.service';
 import { QueryLogsDto } from './dto/query-logs.dto';
 import { StatsQueryDto } from './dto/stats-query.dto';
+import { getLast30DaysIsoRange } from '../common/swagger.utils';
+
+const { startIso: LOGS_START_DEFAULT, endIso: LOGS_END_DEFAULT } = getLast30DaysIsoRange();
 
 @ApiTags('logs')
 @Controller('logs')
@@ -21,8 +24,8 @@ export class LogsController {
 
   @Get('stats')
   @ApiOperation({ summary: 'Get log statistics' })
-  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2025-09-01T00:00:00Z', description: 'Start date (ISO format)' })
-  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2025-10-01T23:59:59Z', description: 'End date (ISO format)' })
+  @ApiQuery({ name: 'startDate', required: false, description: 'Start date (ISO format)', schema: { type: 'string', default: LOGS_START_DEFAULT, example: LOGS_START_DEFAULT } })
+  @ApiQuery({ name: 'endDate', required: false, description: 'End date (ISO format)', schema: { type: 'string', default: LOGS_END_DEFAULT, example: LOGS_END_DEFAULT } })
   async getStats(
     @Query() query: StatsQueryDto,
   ) {

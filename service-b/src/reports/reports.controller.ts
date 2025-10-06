@@ -3,6 +3,9 @@ import { ApiTags, ApiOperation, ApiQuery, ApiProduces } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ReportsService } from './reports.service';
 import { GenerateReportDto } from './dto/generate-report.dto';
+import { getLast30DaysIsoRange } from '../common/swagger.utils';
+
+const { startIso: REPORTS_START_DEFAULT, endIso: REPORTS_END_DEFAULT } = getLast30DaysIsoRange();
 
 @ApiTags('reports')
 @Controller('reports')
@@ -11,8 +14,8 @@ export class ReportsController {
 
   @Get('timeseries')
   @ApiOperation({ summary: 'Get time series data from RedisTimeSeries' })
-  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2025-09-01T00:00:00Z', description: 'Start date for report (ISO format)' })
-  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2025-10-01T23:59:59Z', description: 'End date for report (ISO format)' })
+  @ApiQuery({ name: 'startDate', required: false, description: 'Start date for report (ISO format)', schema: { type: 'string', default: REPORTS_START_DEFAULT, example: REPORTS_START_DEFAULT } })
+  @ApiQuery({ name: 'endDate', required: false, description: 'End date for report (ISO format)', schema: { type: 'string', default: REPORTS_END_DEFAULT, example: REPORTS_END_DEFAULT } })
   async getTimeSeriesData(
     @Query() query: GenerateReportDto,
   ) {
@@ -26,8 +29,8 @@ export class ReportsController {
   @Get('pdf')
   @ApiOperation({ summary: 'Generate PDF report with charts from time series data' })
   @ApiProduces('application/pdf')
-  @ApiQuery({ name: 'startDate', required: false, type: String, example: '2025-09-01T00:00:00Z', description: 'Start date for report (ISO format)' })
-  @ApiQuery({ name: 'endDate', required: false, type: String, example: '2025-10-01T23:59:59Z', description: 'End date for report (ISO format)' })
+  @ApiQuery({ name: 'startDate', required: false, description: 'Start date for report (ISO format)', schema: { type: 'string', default: REPORTS_START_DEFAULT, example: REPORTS_START_DEFAULT } })
+  @ApiQuery({ name: 'endDate', required: false, description: 'End date for report (ISO format)', schema: { type: 'string', default: REPORTS_END_DEFAULT, example: REPORTS_END_DEFAULT } })
   async generatePDFReport(
     @Res() res: Response,
     @Query() query: GenerateReportDto,
