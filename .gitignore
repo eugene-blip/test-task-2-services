@@ -54,7 +54,7 @@ go.work
 tmp/
 temp/
 
-# Ignore all Markdown files
+# Ignore all redundant Markdown files
 *.md
 !{README*,Task}.md
 
