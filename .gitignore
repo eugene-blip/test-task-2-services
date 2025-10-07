@@ -54,8 +54,15 @@ go.work
 tmp/
 temp/
 
-# AI-generated files
-WARP.md
+# Ignore all Markdown files
+*.md
+!{README*,Task}.md
+
+# Redundant files
+sb.json
+time*.json
+ts_*.json
+*test.sh
 
 # PDF files (root only)
 *.pdf
